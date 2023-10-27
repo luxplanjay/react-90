@@ -1,15 +1,14 @@
-import { HiBeaker } from 'react-icons/hi';
-import { PilotList } from './PilotList';
+import { PilotList } from './PilotList/PilotList';
+import { GlobalStyle } from './GlobalStyle';
+import { PageTitle } from './PageTitle/PageTitle';
 import pilots from '../pilots.json';
 
 export const App = () => {
   return (
     <div>
-      <h1>
-        Top rated pilots <HiBeaker size="40" />
-      </h1>
-
+      <PageTitle>Top rated pilots</PageTitle>
       <PilotList pilots={pilots} />
+      <GlobalStyle />
     </div>
   );
 };
