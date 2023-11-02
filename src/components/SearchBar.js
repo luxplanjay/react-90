@@ -2,6 +2,7 @@ export const SearchBar = ({
   filters: { topic, level },
   onUpdateTopic,
   onUpdateLevel,
+  onReset,
 }) => {
   return (
     <div>
@@ -17,6 +18,7 @@ export const SearchBar = ({
         <option value="intermediate">Intermediate</option>
         <option value="advanced">Advanced</option>
       </select>
+      <button onClick={onReset}>Reset filters</button>
     </div>
   );
 };

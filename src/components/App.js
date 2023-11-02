@@ -1,18 +1,21 @@
 import { Component } from 'react';
-import { QuizForm } from './QuizForm';
+import { nanoid } from 'nanoid';
+import { QuizForm } from './QuizForm/QuizForm';
 import { QuizList } from './QuizList/QuizList';
 import { SearchBar } from './SearchBar';
 import { GlobalStyle } from './GlobalStyle';
 import { Layout } from './Layout';
 import initialQuizItems from '../quiz-items.json';
 
+const intialFilters = {
+  topic: '',
+  level: 'all',
+};
+
 export class App extends Component {
   state = {
     quizItems: initialQuizItems,
-    filters: {
-      topic: '',
-      level: 'all',
-    },
+    filters: intialFilters,
   };
 
   updateTopicFilter = newTopic => {
@@ -37,6 +40,34 @@ export class App extends Component {
     });
   };
 
+  resetFilters = () => {
+    this.setState({
+      filters: intialFilters,
+    });
+  };
+
+  deleteQuiz = quizId => {
+    console.log('deleteQuiz', quizId);
+    this.setState(prevState => {
+      return {
+        quizItems: prevState.quizItems.filter(item => item.id !== quizId),
+      };
+    });
+  };
+
+  addQuiz = newQuiz => {
+    const quiz = {
+      ...newQuiz,
+      id: nanoid(),
+    };
+
+    this.setState(prevState => {
+      return {
+        quizItems: [...prevState.quizItems, quiz],
+      };
+    });
+  };
+
   render() {
     const { quizItems, filters } = this.state;
 
@@ -55,13 +86,16 @@ export class App extends Component {
 
     return (
       <Layout>
-        <QuizForm />
+        <QuizForm onAdd={this.addQuiz} />
         <SearchBar
           filters={filters}
           onUpdateTopic={this.updateTopicFilter}
           onUpdateLevel={this.updateLevelFilter}
+          onReset={this.resetFilters}
         />
-        {visibleQuizItems.length > 0 && <QuizList items={visibleQuizItems} />}
+        {visibleQuizItems.length > 0 && (
+          <QuizList items={visibleQuizItems} onDelete={this.deleteQuiz} />
+        )}
         <GlobalStyle />
       </Layout>
     );
