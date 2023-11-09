@@ -1,10 +1,10 @@
 import { Component } from 'react';
 
-// submit > query > cat > page 1
-// click > query > cat > page 2
-// click > query > cat > page 3
+// "12345/cat"
 
-// submit > query > dog > page 1
+// "12346/cat"
+
+// "12345/cat"  !== "12346/cat"
 
 class App extends Component {
   state = {
@@ -18,6 +18,7 @@ class App extends Component {
       prevState.query !== this.state.query ||
       prevState.page !== this.state.page
     ) {
+      // ОТРЕЗАТЬ ID ЗАПРОСА ИЗ QUERY
       // делаем http запрос с query и page
       // записываем результат в images
     }
@@ -25,7 +26,7 @@ class App extends Component {
 
   handleSubmit = newQuery => {
     this.setState({
-      query: newQuery,
+      query: `${Date.now()}/${newQuery}`,
       page: 1,
       images: [],
     });
