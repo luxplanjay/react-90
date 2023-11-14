@@ -1,55 +1,38 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { TopicModal } from 'components/TopicModal';
 import { Topic, Wrapper, MetaWrapper, Text, Button } from './QuizCard.styled';
 
-export class QuizCard extends Component {
-  state = {
-    isModalOpen: false,
-  };
+export const QuizCard = ({
+  quiz: { id, topic, level, time, questions },
+  onDelete,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  openModal = () => {
-    this.setState({
-      isModalOpen: true,
-    });
-  };
+  const openModal = () => setIsModalOpen(true);
 
-  closeModal = () => {
-    this.setState({
-      isModalOpen: false,
-    });
-  };
+  const closeModal = () => setIsModalOpen(false);
 
-  render() {
-    const { isModalOpen } = this.state;
-    const {
-      quiz: { id, topic, level, time, questions },
-      onDelete,
-    } = this.props;
+  const deleteCard = () => onDelete(id);
 
-    return (
-      <Wrapper level={level}>
-        <Topic>{topic}</Topic>
-        <MetaWrapper>
-          <Text>
-            <b>Level:</b> {level}
-          </Text>
-          <Text>
-            <b>Time:</b> {time}
-          </Text>
-          <Text>
-            <b>Questions:</b> {questions}
-          </Text>
-        </MetaWrapper>
-        <div>
-          <Button onClick={() => onDelete(id)}>Delete</Button>
-          <Button onClick={this.openModal}>Edit</Button>
-        </div>
-        <TopicModal
-          isOpen={isModalOpen}
-          onClose={this.closeModal}
-          topic={topic}
-        />
-      </Wrapper>
-    );
-  }
-}
+  return (
+    <Wrapper level={level}>
+      <Topic>{topic}</Topic>
+      <MetaWrapper>
+        <Text>
+          <b>Level:</b> {level}
+        </Text>
+        <Text>
+          <b>Time:</b> {time}
+        </Text>
+        <Text>
+          <b>Questions:</b> {questions}
+        </Text>
+      </MetaWrapper>
+      <div>
+        <Button onClick={deleteCard}>Delete</Button>
+        <Button onClick={openModal}>Edit</Button>
+      </div>
+      <TopicModal isOpen={isModalOpen} onClose={closeModal} topic={topic} />
+    </Wrapper>
+  );
+};

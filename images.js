@@ -1,54 +1,39 @@
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
 
-// "12345/cat"
+const App = () => {
+  const [images, setImages] = useState([]);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
 
-// "12346/cat"
-
-// "12345/cat"  !== "12346/cat"
-
-class App extends Component {
-  state = {
-    images: [],
-    query: '',
-    page: 1,
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.query !== this.state.query ||
-      prevState.page !== this.state.page
-    ) {
-      // ОТРЕЗАТЬ ID ЗАПРОСА ИЗ QUERY
-      // делаем http запрос с query и page
-      // записываем результат в images
+  useEffect(() => {
+    if (query === '') {
+      return;
     }
-  }
 
-  handleSubmit = newQuery => {
-    this.setState({
-      query: `${Date.now()}/${newQuery}`,
-      page: 1,
-      images: [],
-    });
+    // ОТРЕЗАТЬ ID ЗАПРОСА ИЗ QUERY
+    // делаем http запрос с query и page
+    // записываем результат в images
+    console.log(query);
+    console.log(page);
+  }, [page, query]);
+
+  const handleSubmit = newQuery => {
+    setImages([]);
+    setQuery(`${Date.now()}/${newQuery.trim()}`);
+    setPage(1);
   };
 
-  handleLoadMore = () => {
-    this.setState(prevState => {
-      return {
-        page: prevState.page + 1,
-      };
-    });
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.handleSubmit}></form>
+  return (
+    <div>
+      <form onSubmit={handleSubmit}></form>
 
-        <div>Gallery</div>
+      <div>Gallery</div>
 
-        <button onClick={this.handleLoadMore}>Load more</button>
-      </div>
-    );
-  }
-}
+      <button onClick={handleLoadMore}>Load more</button>
+    </div>
+  );
+};
