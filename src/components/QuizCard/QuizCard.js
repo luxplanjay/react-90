@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { TopicModal } from 'components/TopicModal';
 import { Topic, Wrapper, MetaWrapper, Text, Button } from './QuizCard.styled';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export const QuizCard = ({
   quiz: { id, topic, level, time, questions },
   onDelete,
 }) => {
+  const location = useLocation();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -17,7 +19,7 @@ export const QuizCard = ({
 
   return (
     <Wrapper level={level}>
-      <Link to={`/list/${id}`}>
+      <Link to={`/list/${id}`} state={{ from: location }}>
         <Topic>{topic}</Topic>
       </Link>
       <MetaWrapper>

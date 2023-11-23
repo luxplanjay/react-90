@@ -1,8 +1,20 @@
 import { fetchQuizById } from 'api';
-import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
 
 export default function QuizDetailsPage() {
+  const location = useLocation();
+  const backLinkRef = useRef(location);
+
+  // console.log('QuizDetailsPage location: ', location);
+  // console.log('QuizDetailsPage backLinkRef: ', backLinkRef.current);
+
   const params = useParams();
   const [quiz, setQuiz] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +37,9 @@ export default function QuizDetailsPage() {
   return (
     <div>
       {isLoading && <b>LOADING QUIZ...</b>}
+      <Link to={backLinkRef.current.state?.from ?? '/list'}>
+        <b>Back to quizzes</b>
+      </Link>
       {quiz && <h1>{quiz.topic}</h1>}
 
       <ul>

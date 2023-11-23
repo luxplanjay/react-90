@@ -4,24 +4,13 @@ import toast from 'react-hot-toast';
 import { QuizList } from 'components/QuizList/QuizList';
 import { SearchBar } from 'components/SearchBar';
 import { deleteQuizById, fetchQuizzes } from 'api';
-
-const intialFilters = {
-  topic: '',
-  level: 'all',
-};
-
-const storageKey = 'quiz-filters';
-
-const getInitialFilters = () => {
-  const savedFilters = window.localStorage.getItem(storageKey);
-  return savedFilters !== null ? JSON.parse(savedFilters) : intialFilters;
-};
+import { useQuizFilters } from 'hooks/useQuizFilters';
 
 export default function QuizzesPage() {
   const [quizItems, setQuizItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [filters, setFilters] = useState(getInitialFilters);
+  const { topic, level } = useQuizFilters();
 
   useEffect(() => {
     async function getQuizzes() {
@@ -40,10 +29,6 @@ export default function QuizzesPage() {
     getQuizzes();
   }, []);
 
-  useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(filters));
-  }, [filters]);
-
   const deleteQuiz = async quizId => {
     try {
       setIsLoading(true);
@@ -58,45 +43,20 @@ export default function QuizzesPage() {
     }
   };
 
-  const updateTopicFilter = newTopic => {
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      topic: newTopic,
-    }));
-  };
-
-  const updateLevelFilter = newLevel => {
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      level: newLevel,
-    }));
-  };
-
-  const resetFilters = () => {
-    setFilters(intialFilters);
-  };
-
   const visibleQuizItems = quizItems.filter(item => {
-    const hasTopic = item.topic
-      .toLowerCase()
-      .includes(filters.topic.toLowerCase());
+    const hasTopic = item.topic.toLowerCase().includes(topic.toLowerCase());
 
-    if (filters.level === 'all') {
+    if (level === 'all') {
       return hasTopic;
     }
 
-    const matchesLevel = item.level === filters.level;
+    const matchesLevel = item.level === level;
     return hasTopic && matchesLevel;
   });
 
   return (
     <div>
-      <SearchBar
-        filters={filters}
-        onUpdateTopic={updateTopicFilter}
-        onUpdateLevel={updateLevelFilter}
-        onReset={resetFilters}
-      />
+      <SearchBar />
       {isLoading && (
         <Bars
           height="80"

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { GlobalStyle } from './GlobalStyle';
 import { Layout } from './Layout';
@@ -23,7 +24,9 @@ export const AppLayout = () => {
       </header>
 
       <main>
-        <Outlet />
+        <Suspense fallback={<div>LOADING PAGE...</div>}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <footer>FOOTER</footer>
