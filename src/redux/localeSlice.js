@@ -16,6 +16,9 @@ const localeSlice = createSlice({
             value: lang,
             time: Date.now(),
           },
+          meta: {
+            ga: true,
+          },
         };
       },
       reducer(state, action) {
